@@ -330,7 +330,7 @@ public class MainWindow {
 
                 double pointX = (dx + point.getCords().get(0) + config.scale / 2) * canvas.getWidth() / scale;
                 double pointY = canvas.getHeight() - (dx + point.getCords().get(1) + config.scale / 2) * canvas.getHeight() / scale;
-                System.out.println("PointX" + pointX + " PointY" + pointY);
+                System.out.println("PointX " + pointX + ", PointY " + pointY);
                 gc.strokeOval(pointX, pointY, 2, 2);
 
             }
