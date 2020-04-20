@@ -9,15 +9,9 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 /**
- *
  * @author David Červenka
  */
 public class Main extends Application {
-    
-    @Override
-    public void start(Stage primaryStage) {
-        MainWindow.openWindow(primaryStage);
-    }
 
     /**
      * @param args the command line arguments
@@ -25,5 +19,10 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
+    @Override
+    public void start(Stage primaryStage) {
+        MainWindow.openWindow(primaryStage);
+    }
+
 }

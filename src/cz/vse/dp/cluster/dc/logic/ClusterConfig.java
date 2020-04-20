@@ -7,17 +7,17 @@ package cz.vse.dp.cluster.dc.logic;
 
 import cz.vse.dp.cluster.dc.logic.impl.EuclideanDistance;
 import cz.vse.dp.cluster.dc.logic.intf.IDistance;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 /**
- *
  * @author David Červenka
  */
- public class ClusterConfig  {
-     
+public class ClusterConfig {
+
     public int clusterCount;
     public int dimensions;
     public double scale;
@@ -37,61 +37,61 @@ import java.util.stream.IntStream;
         this.clusterPerimeter = clusterPerimeter;
         this.clusterSize = clusterSize;
         this.distributionType = distributionType;
-        
+
         centers = new ArrayList<>();
         metric = new EuclideanDistance();
-        
+
     }
-    
+
     public void generate() {
-        
+
         centers = new ArrayList<>();
         final PointEx[] candidate = new PointEx[1];
-        
+
         int attempts = 0;
-        
+
         for (int i = 0; i < clusterCount; i++) {
             do {
                 candidate[0] = PointEx
                         .createRandom(dimensions, distributionType)
                         .multiply(scale);
             } while (attempts++ < 1000 && !centers
-                                            .stream()
-                                            .allMatch(getMatch(candidate)));
-          
+                    .stream()
+                    .allMatch(getMatch(candidate)));
+
             if (attempts >= 1000) {
                 throw new IllegalArgumentException("Unable to find candidate after 1000 attempts.");
             }
             centers.add(candidate[0]);
         }
-        
+
         clusters = new ArrayList<>();
-        
+
         IntStream.range(0, clusterCount)
-               .parallel()
-               .forEach(i -> clusters.add(generateCluster(centers.get(i))));
+                .parallel()
+                .forEach(i -> clusters.add(generateCluster(centers.get(i))));
     }
-    
-    
+
+
     private Cluster generateCluster(PointEx center) {
         Cluster result = new Cluster();
         result.setPoints(new ArrayList<>());
-        
-        
+
+
         for (int i = 0; i < clusterSize; i++) {
             double clusterScale = 2 * clusterPerimeter;
             PointEx multiply = PointEx.createRandomSpherical(dimensions, distributionType).multiply(clusterScale);
             PointEx plus = multiply.plus(center);
             result.getPoints().add(plus);
         }
-        
+
         return result;
-    }  
+    }
 
     private Predicate<PointEx> getMatch(final PointEx[] candidate) {
         return p -> metric.calculateDistance(p, candidate[0]) > distance;
     }
-    
+
     public int getClusterCount() {
         return clusterCount;
     }
@@ -163,9 +163,6 @@ import java.util.stream.IntStream;
     public void setClusterSize(int clusterSize) {
         this.clusterSize = clusterSize;
     }
-    
-        
-        
-        
-        
+
+
 }

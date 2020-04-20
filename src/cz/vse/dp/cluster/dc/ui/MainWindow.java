@@ -5,56 +5,31 @@
  */
 package cz.vse.dp.cluster.dc.ui;
 
-import cz.vse.dp.cluster.dc.logic.Cluster;
-import cz.vse.dp.cluster.dc.logic.ClusterConfig;
-import cz.vse.dp.cluster.dc.logic.DistributionType;
-import cz.vse.dp.cluster.dc.logic.PointEx;
-import cz.vse.dp.cluster.dc.logic.Tools;
+import cz.vse.dp.cluster.dc.logic.*;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import java.util.Random;
 
-import javafx.beans.value.ObservableValue;
-
-import javax.swing.*;
-
 /**
- *
  * @author David Červenka
  */
 public class MainWindow {
-    
-    static Label sizeLbl = new Label("Velikost shluku:");
-    static Label countLbl = new Label("Počet shluků:");
-    static Label perimeterLbl = new Label("Průměr shluku:");
-    static Label distanceLbl = new Label("Vzdálenost:");
-    static Label scaleLbl = new Label("Škála:");
-    static Label dimensionsLbl = new Label("Dimenze:");
-    static Label centersLbl = new Label("Středy:");
-    static Label pointsLbl = new Label("Body:");
-    static Label distributionLbl = new Label ("Rozdělení:");
-    static Label outputLbl = new Label ("Výstupní soubor:");
-    static Label iterationsLbl = new Label ("Počet iterací:");
-    
+
     public static TextField sizeArea = new TextField();
     public static TextField countArea = new TextField();
     public static TextField perimeterArea = new TextField();
@@ -64,54 +39,64 @@ public class MainWindow {
     public static TextArea centersArea = new TextArea();
     public static TextArea pointsArea = new TextArea();
     public static TextField iterationsArea = new TextField();
-    
+    static Label sizeLbl = new Label("Velikost shluku:");
+    static Label countLbl = new Label("Počet shluků:");
+    static Label perimeterLbl = new Label("Průměr shluku:");
+    static Label distanceLbl = new Label("Vzdálenost:");
+    static Label scaleLbl = new Label("Škála:");
+    static Label dimensionsLbl = new Label("Dimenze:");
+    static Label centersLbl = new Label("Středy:");
+    static Label pointsLbl = new Label("Body:");
+    static Label distributionLbl = new Label("Rozdělení:");
+    static Label outputLbl = new Label("Výstupní soubor:");
+    static Label iterationsLbl = new Label("Počet iterací:");
     static Canvas canvas = new Canvas();
-    
+
     public static void openWindow(Stage stage) {
-        
+
         GridPane outerGrid = new GridPane();
-        
+
         ColumnConstraints column1 = new ColumnConstraints(320);
         ColumnConstraints column2 = new ColumnConstraints();
         outerGrid.getColumnConstraints().addAll(column1, column2);
-        
-        
+
+
         canvas.setWidth(630);
         canvas.setHeight(630);
 
-        
+
         outerGrid.add(canvas, 1, 0);
-        
-        
+
+
         //drawing components to the inner grid
         setInnerGrid(outerGrid);
-        
-        
+
+
         StackPane root = new StackPane();
         root.getChildren().add(outerGrid);
-        
+
         Scene scene = new Scene(root, 950, 630);
-        
+
         stage.setMinWidth(967);
         stage.setMinHeight(670);
-        
+
         stage.setTitle("Generátor shluků");
         stage.setScene(scene);
         stage.show();
-        
+
     }
-    
-    private static void setInnerGrid (GridPane grid) {
+
+    private static void setInnerGrid(GridPane grid) {
         GridPane innerGrid = new GridPane();
-        
+
         innerGrid.setHgap(10);
         innerGrid.setVgap(10);
-        innerGrid.setPadding(new Insets(25,25,25,25));
-        
+        innerGrid.setPadding(new Insets(25, 25, 25, 25));
+
         ColumnConstraints column1 = new ColumnConstraints(150);
         ColumnConstraints column2 = new ColumnConstraints();
         innerGrid.getColumnConstraints().addAll(column1, column2);
-        
+
         final ToggleGroup group1 = new ToggleGroup();
 
         RadioButton rb1 = new RadioButton("Normální");
@@ -120,7 +105,7 @@ public class MainWindow {
 
         RadioButton rb2 = new RadioButton("Rovnoměrné");
         rb2.setToggleGroup(group1);
-        
+
         final ToggleGroup group2 = new ToggleGroup();
 
         RadioButton rb3 = new RadioButton("TXT");
@@ -129,7 +114,7 @@ public class MainWindow {
 
         RadioButton rb4 = new RadioButton("CSV");
         rb4.setToggleGroup(group2);
-        
+
         innerGrid.add(sizeLbl, 0, 0);
         innerGrid.add(countLbl, 0, 1);
         innerGrid.add(perimeterLbl, 0, 2);
@@ -141,7 +126,7 @@ public class MainWindow {
         innerGrid.add(iterationsLbl, 0, 10);
         innerGrid.add(centersLbl, 0, 12);
         innerGrid.add(pointsLbl, 0, 14);
-        
+
         innerGrid.add(sizeArea, 1, 0);
         innerGrid.add(countArea, 1, 1);
         innerGrid.add(perimeterArea, 1, 2);
@@ -151,19 +136,19 @@ public class MainWindow {
         innerGrid.add(iterationsArea, 1, 10);
         innerGrid.add(centersArea, 0, 13, 2, 1);
         innerGrid.add(pointsArea, 0, 15, 2, 1);
-        
+
         innerGrid.add(rb1, 1, 6);
         innerGrid.add(rb2, 1, 7);
         innerGrid.add(rb3, 1, 8);
         innerGrid.add(rb4, 1, 9);
-        
+
         centersArea.setEditable(false);
         pointsArea.setEditable(false);
-        
+
         Button generateBtn = new Button("Generovat");
         generateBtn.setPrefWidth(270);
         innerGrid.add(generateBtn, 0, 11, 2, 1);
-        
+
         sizeArea.setText("200");
         countArea.setText("2");
         perimeterArea.setText("200");
@@ -171,7 +156,7 @@ public class MainWindow {
         scaleArea.setText("1000");
         dimensionsArea.setText("2");
         iterationsArea.setText("1");
-        
+
         // force the field to be numeric only
         sizeArea.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             validate(sizeArea, newValue);
@@ -195,7 +180,7 @@ public class MainWindow {
             validate(iterationsArea, newValue);
         });
 
-        
+
         generateBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -219,7 +204,7 @@ public class MainWindow {
 
                 RadioButton selectedToggle1 = (RadioButton) group2.getSelectedToggle();
                 String outputFile = selectedToggle1.getText().toLowerCase();
-                
+
                 ClusterConfig config = null;
 
                 for (int i = 0; i < Integer.parseInt(iterationsArea.getText()); i++) {
@@ -277,10 +262,10 @@ public class MainWindow {
                 int pointsCount = pointsArea.getLength();
                 pointsArea.setText(points.substring(0, pointsCount - 2));
 
-                
+
             }
-        });        
-        
+        });
+
         grid.add(innerGrid, 0, 0);
     }
 
@@ -288,17 +273,17 @@ public class MainWindow {
         if (!newValue.matches("\\d*")) {
             textField.setText(newValue.replaceAll("[^\\d]", ""));
         }
-        if (newValue.length() > 0  && newValue.startsWith("0")){
+        if (newValue.length() > 0 && newValue.startsWith("0")) {
             textField.setText(newValue.replaceFirst("0", ""));
         }
     }
 
-    private static void drawGraph (ClusterConfig config) {
+    private static void drawGraph(ClusterConfig config) {
         double middlePoint = canvas.getWidth() / 2;
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        
+
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        
+
         gc.setFill(javafx.scene.paint.Color.WHITE);
         gc.setStroke(javafx.scene.paint.Color.BLACK);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -306,26 +291,26 @@ public class MainWindow {
         gc.strokeLine(630, 0, 630, 630);
         gc.strokeLine(630, 630, 0, 630);
         gc.strokeLine(0, 630, 0, 0);
-        
-        
+
+
         gc.strokeLine(middlePoint, 30, middlePoint, 600);
         gc.strokeLine(30, middlePoint, 600, middlePoint);
-        
-        
-        double scale = config.scale + 2*config.clusterPerimeter;
+
+
+        double scale = config.scale + 2 * config.clusterPerimeter;
         double dx = config.clusterPerimeter;
-        
+
         for (Cluster cluster : config.getClusters()) {
-            
+
             Random rand = new Random();
             float r = rand.nextFloat();
             float g = rand.nextFloat();
             float b = rand.nextFloat();
-            
+
             Color randomColor = new Color(r, g, b, 1);
 
             gc.setStroke(randomColor);
-            
+
             for (PointEx point : cluster.getPoints()) {
 
                 double pointX = (dx + point.getCords().get(0) + config.scale / 2) * canvas.getWidth() / scale;
@@ -334,9 +319,9 @@ public class MainWindow {
                 gc.strokeOval(pointX, pointY, 2, 2);
 
             }
-            
+
         }
-        
+
     }
-    
+
 }

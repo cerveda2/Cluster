@@ -15,25 +15,16 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author David Červenka
  */
 public class PointEx implements Iterable<Double> {
 
+    private static volatile long seedUniquifier = 8682522807148012L;
     private List<Double> cords;
-
-    @Override
-    public Iterator<Double> iterator() {
-        if (cords != null) {
-            return cords.iterator();
-        } else {
-            throw new IllegalArgumentException("Coords must not be null");
-        }
-    }
 
     public PointEx(int dimension, List<Double> cords) {
 
-        if(cords.size() != dimension) {
+        if (cords.size() != dimension) {
             throw new IllegalArgumentException("Dimension must equal to cords size.");
         }
 
@@ -62,27 +53,17 @@ public class PointEx implements Iterable<Double> {
         this.cords = new ArrayList<>(point.getCords());
     }
 
-    public List<Double> getCords() {
-        return cords;
-    }
-
-    public int getDimension(){
-        return cords.size();
-    }
-
-    private static volatile long seedUniquifier = 8682522807148012L;
-
     public static PointEx createRandom(int dimensions, DistributionType distributionType) {
         PointEx result = new PointEx(dimensions);
 
         Random rnd = new Random(seedUniquifier + System.nanoTime());
-        for(int i = 0; i < dimensions; i++) {
+        for (int i = 0; i < dimensions; i++) {
             double randomValue;
             switch (distributionType) {
                 case NORMÁLNÍ:
                     // Tato funkce muze vratit teoreticky cokoliv je treba ji osekat. V 70% pripadu vrati hodnotu od -1 do 1 osekame vydelenim 2 a pak cyklem
                     do {
-                        randomValue = rnd.nextGaussian()/2d;
+                        randomValue = rnd.nextGaussian() / 2d;
                     } while (Math.abs(randomValue) > 0.5);
                     break;
                 case ROVNOMĚRNÉ:
@@ -111,12 +92,28 @@ public class PointEx implements Iterable<Double> {
         return candidate;
     }
 
+    @Override
+    public Iterator<Double> iterator() {
+        if (cords != null) {
+            return cords.iterator();
+        } else {
+            throw new IllegalArgumentException("Coords must not be null");
+        }
+    }
+
+    public List<Double> getCords() {
+        return cords;
+    }
+
+    public int getDimension() {
+        return cords.size();
+    }
+
     public PointEx multiply(double scale) {
 
         List<Double> multipliedNumbers = getCords().stream()
-                .map(c -> c*scale)
-                .collect(Collectors.toList())
-                ;
+                .map(c -> c * scale)
+                .collect(Collectors.toList());
 
         PointEx result = new PointEx(this.getDimension(), multipliedNumbers);
         return result;
@@ -126,25 +123,20 @@ public class PointEx implements Iterable<Double> {
         PointEx result = new PointEx(this);
 
         for (int i = 0; i < this.getDimension(); i++) {
-            result.getCords().set(i, result.getCords().get(i) +  right.getCords().get(i));
+            result.getCords().set(i, result.getCords().get(i) + right.getCords().get(i));
         }
 
         return result;
     }
+
     @Override
-    public String toString() {      
+    public String toString() {
         StringBuilder builder = new StringBuilder();
 
         cords.forEach(t -> builder.append(t).append("; "));
 
         return builder.toString().replaceAll("\\.", ",");
     }
-
-
-
-
-
-
 
 
 }
