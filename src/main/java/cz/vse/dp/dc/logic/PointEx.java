@@ -60,13 +60,13 @@ public class PointEx implements Iterable<Double> {
         for (int i = 0; i < dimensions; i++) {
             double randomValue;
             switch (distributionType) {
-                case NORMAL:
+                case NORMÁLNÍ:
                     // Tato funkce muze vratit teoreticky cokoliv je treba ji osekat. V 70% pripadu vrati hodnotu od -1 do 1 osekame vydelenim 2 a pak cyklem
                     do {
                         randomValue = rnd.nextGaussian() / 2d;
                     } while (Math.abs(randomValue) > 0.5);
                     break;
-                case UNIFORM:
+                case ROVNOMĚRNÉ:
                     randomValue = rnd.nextDouble() - 0.5;
                     break;
                 default:
