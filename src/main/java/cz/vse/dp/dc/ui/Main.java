@@ -5,26 +5,27 @@
  */
 package cz.vse.dp.dc.ui;
 
-import cz.vse.dp.dc.ui.MainWindow;
+import cz.vse.dp.dc.logic.impl.ApacheSparkTestClass;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 /**
- *
  * @author David Červenka
  */
 public class Main extends Application {
-    
-    @Override
-    public void start(Stage primaryStage) {
-        MainWindow.openWindow(primaryStage);
-    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        /*ApacheSparkTestClass apache = new ApacheSparkTestClass();
+        apache.test();*/
         launch(args);
     }
-    
+
+    @Override
+    public void start(Stage primaryStage) {
+        MainWindow.openWindow(primaryStage);
+    }
+
 }

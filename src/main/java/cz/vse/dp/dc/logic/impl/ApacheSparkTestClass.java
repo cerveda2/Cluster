@@ -8,13 +8,14 @@ import org.apache.spark.mllib.linalg.Matrix;
 import org.apache.spark.mllib.linalg.Vector;
 import org.apache.spark.mllib.linalg.Vectors;
 import org.apache.spark.mllib.linalg.distributed.RowMatrix;
+
 import java.util.Arrays;
 import java.util.List;
 
 public class ApacheSparkTestClass {
 
     public void test() {
-        SparkConf conf = new SparkConf().setAppName("PCA Example");
+        SparkConf conf = new SparkConf().setAppName("PCA Example").setMaster("local[2]").set("spark.executor.memory", "1g");
         SparkContext sc = new SparkContext(conf);
         JavaSparkContext jsc = JavaSparkContext.fromSparkContext(sc);
         List<Vector> data = Arrays.asList(
@@ -25,14 +26,14 @@ public class ApacheSparkTestClass {
 
         JavaRDD<Vector> rows = jsc.parallelize(data);
 
-// Create a RowMatrix from JavaRDD<Vector>.
+        // Create a RowMatrix from JavaRDD<Vector>.
         RowMatrix mat = new RowMatrix(rows.rdd());
 
-// Compute the top 4 principal components.
-// Principal components are stored in a local dense matrix.
+        // Compute the top 4 principal components.
+        // Principal components are stored in a local dense matrix.
         Matrix pc = mat.computePrincipalComponents(4);
 
-// Project the rows to the linear space spanned by the top 4 principal components.
+        // Project the rows to the linear space spanned by the top 4 principal components.
         RowMatrix projected = mat.multiply(pc);
     }
 }

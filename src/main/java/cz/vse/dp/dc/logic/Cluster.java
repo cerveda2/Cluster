@@ -8,13 +8,12 @@ package cz.vse.dp.dc.logic;
 import java.util.List;
 
 /**
- *
  * @author David Červenka
  */
 public class Cluster {
-    
+
     private List<PointEx> points;
-    
+
     public List<PointEx> getPoints() {
         return points;
     }
@@ -22,5 +21,5 @@ public class Cluster {
     public void setPoints(List<PointEx> points) {
         this.points = points;
     }
-    
+
 }

@@ -8,11 +8,10 @@ package cz.vse.dp.dc.logic.intf;
 import cz.vse.dp.dc.logic.PointEx;
 
 /**
- *
  * @author David Červenka
  */
 public interface IDistance {
-    
+
     double calculateDistance(PointEx x, PointEx y);
-    
+
 }
