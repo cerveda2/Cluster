@@ -6,6 +6,7 @@
 package cz.vse.dp.dc.ui;
 
 import cz.vse.dp.dc.logic.*;
+import cz.vse.dp.dc.logic.impl.ApacheSparkTestClass;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -286,7 +287,10 @@ public class MainWindow {
 
             gc.setStroke(randomColor);
 
-            for (PointEx point : cluster.getPoints()) {
+            ApacheSparkTestClass apacheSpark = new ApacheSparkTestClass();
+            Cluster pcaCluster = apacheSpark.reduceDimensions(cluster);
+
+            for (PointEx point : pcaCluster.getPoints()) {
                 double pointX = (dx + point.getCords().get(0) + config.scale / 2) * canvas.getWidth() / scale;
                 double pointY = canvas.getHeight() - (dx + point.getCords().get(1) + config.scale / 2) * canvas.getHeight() / scale;
                 System.out.println("PointX " + pointX + ", PointY " + pointY);
