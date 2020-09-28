@@ -20,8 +20,8 @@ public class ApacheSparkTestClass {
      * Uses Apache Spark to perform PCA (Principle component analysis)
      * to reduce dimensions without data compression
      *
-     * @param cluster
-     * @return
+     * @param cluster starting set of coordinates
+     * @return transformed set of coordinates
      */
 
     public Cluster reduceDimensions(Cluster cluster) {
@@ -39,7 +39,7 @@ public class ApacheSparkTestClass {
         // Convert cluster data to vectors
         List<Vector> data = new ArrayList<>();
         for (int i = 0; i < cluster.getPoints().size(); i++) {
-            List<Double> listCoords = cluster.getPoints().get(i).getCords();
+            List<Double> listCoords = cluster.getPoints().get(i).getCoordinates();
             double[] arrayCoords = listCoords.stream().mapToDouble(value -> value).toArray();
             data.add(Vectors.dense(arrayCoords));
         }

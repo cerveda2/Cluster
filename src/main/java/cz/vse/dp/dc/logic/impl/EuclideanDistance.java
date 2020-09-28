@@ -21,7 +21,7 @@ public class EuclideanDistance implements IDistance {
         double diff_square_sum = 0.0;
         for (int i = 0; i < minSize; i++) {
 
-            diff_square_sum += Math.pow(x.getCords().get(i) - y.getCords().get(i), 2);
+            diff_square_sum += Math.pow(x.getCoordinates().get(i) - y.getCoordinates().get(i), 2);
         }
         return Math.sqrt(diff_square_sum);
 
@@ -30,8 +30,8 @@ public class EuclideanDistance implements IDistance {
 
         return IntStream.range(0, minSize)
                 .mapToDouble(i -> {
-                    Double pointX = x.getCords().get(i);
-                    Double pointY = y.getCords().get(i);
+                    Double pointX = x.getCoordinates().get(i);
+                    Double pointY = y.getCoordinates().get(i);
                     return Math.pow(pointX - pointY, 2);
                 }).sum();*/
     }

@@ -6,7 +6,6 @@
 package cz.vse.dp.dc.logic;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -27,6 +26,7 @@ public class Tools {
             fw.write(result);
         } catch (IOException e) {
             System.out.print("Exception: " + e);
+            throw new IOException("Unable to save into file", e);
         }
 
 

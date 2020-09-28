@@ -8,6 +8,8 @@ package cz.vse.dp.dc.ui;
 import cz.vse.dp.dc.logic.*;
 import cz.vse.dp.dc.logic.impl.ApacheSparkTestClass;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -20,7 +22,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import javax.swing.*;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Random;
 
@@ -70,7 +71,7 @@ public class MainWindow {
         StackPane root = new StackPane();
         root.getChildren().add(outerGrid);
 
-        Scene scene = new Scene(root, 950, 630);
+        Scene scene = new Scene(root, 1050, 860);
 
         stage.setMinWidth(967);
         stage.setMinHeight(670);
@@ -91,14 +92,22 @@ public class MainWindow {
         ColumnConstraints column2 = new ColumnConstraints();
         innerGrid.getColumnConstraints().addAll(column1, column2);
 
-        final ToggleGroup group1 = new ToggleGroup();
+        ObservableList<String> options =
+                FXCollections.observableArrayList(
+                        "Normální",
+                        "Rovnoměrné"
+                );
+        ComboBox<String> comboBox = new ComboBox<>(options);
+        comboBox.setValue("Normální");
+
+        /*final ToggleGroup group1 = new ToggleGroup();
 
         RadioButton rb1 = new RadioButton("Normální");
         rb1.setToggleGroup(group1);
         rb1.setSelected(true);
 
         RadioButton rb2 = new RadioButton("Rovnoměrné");
-        rb2.setToggleGroup(group1);
+        rb2.setToggleGroup(group1);*/
 
         final ToggleGroup group2 = new ToggleGroup();
 
@@ -115,7 +124,7 @@ public class MainWindow {
         innerGrid.add(distanceLbl, 0, 3);
         innerGrid.add(scaleLbl, 0, 4);
         innerGrid.add(dimensionsLbl, 0, 5);
-        innerGrid.add(distributionLbl, 0, 6, 1, 2);
+        innerGrid.add(distributionLbl, 0, 6, 1, 1);
         innerGrid.add(outputLbl, 0, 8, 1, 2);
         innerGrid.add(iterationsLbl, 0, 10);
         innerGrid.add(centersLbl, 0, 12);
@@ -131,8 +140,8 @@ public class MainWindow {
         innerGrid.add(centersArea, 0, 13, 2, 1);
         innerGrid.add(pointsArea, 0, 15, 2, 1);
 
-        innerGrid.add(rb1, 1, 6);
-        innerGrid.add(rb2, 1, 7);
+        innerGrid.add(comboBox, 1, 6);
+        //innerGrid.add(rb2, 1, 7);
         innerGrid.add(rb3, 1, 8);
         innerGrid.add(rb4, 1, 9);
 
@@ -170,8 +179,7 @@ public class MainWindow {
             int count = Integer.parseInt(countArea.getText());
             int size = Integer.parseInt(sizeArea.getText());
             int dimensions = Integer.parseInt(dimensionsArea.getText());
-            RadioButton selectedToggle = (RadioButton) group1.getSelectedToggle();
-            String distributionText = selectedToggle.getText();
+            String distributionText = comboBox.getValue();
             DistributionType distributionType = DistributionType.valueOf(distributionText.toUpperCase());
 
             RadioButton selectedToggle1 = (RadioButton) group2.getSelectedToggle();
@@ -202,8 +210,6 @@ public class MainWindow {
                 String result = sb.toString();
                 try {
                     Tools.saveToFile(result, outputFile, i + 1);
-                } catch (FileNotFoundException ex) {
-                    System.out.print("Exception: " + ex);
                 } catch (IOException ex) {
                     System.out.print("Exception: " + ex);
                 }
@@ -215,22 +221,24 @@ public class MainWindow {
             }
 
             centersArea.clear();
-            for (PointEx center : config.getCenters()) {
-                centersArea.appendText(center.toString() + "\n");
-            }
-            String centers = centersArea.getText();
-            int centersCount = centersArea.getLength();
-            centersArea.setText(centers.substring(0, centersCount - 2));
-
-            pointsArea.clear();
-            for (Cluster cluster : config.getClusters()) {
-                for (PointEx point : cluster.getPoints()) {
-                    pointsArea.appendText(point.toString() + "\n");
+            if (config != null) {
+                for (PointEx center : config.getCenters()) {
+                    centersArea.appendText(center.toString() + "\n");
                 }
+                String centers = centersArea.getText();
+                int centersCount = centersArea.getLength();
+                centersArea.setText(centers.substring(0, centersCount - 2));
+
+                pointsArea.clear();
+                for (Cluster cluster : config.getClusters()) {
+                    for (PointEx point : cluster.getPoints()) {
+                        pointsArea.appendText(point.toString() + "\n");
+                    }
+                }
+                String points = pointsArea.getText();
+                int pointsCount = pointsArea.getLength();
+                pointsArea.setText(points.substring(0, pointsCount - 2));
             }
-            String points = pointsArea.getText();
-            int pointsCount = pointsArea.getLength();
-            pointsArea.setText(points.substring(0, pointsCount - 2));
         });
         grid.add(innerGrid, 0, 0);
     }
@@ -241,9 +249,7 @@ public class MainWindow {
         }
 
         for (TextField tf : textFields) {
-            tf.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-                validate(tf, newValue);
-            });
+            tf.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> validate(tf, newValue));
         }
     }
 
@@ -291,8 +297,8 @@ public class MainWindow {
             Cluster pcaCluster = apacheSpark.reduceDimensions(cluster);
 
             for (PointEx point : pcaCluster.getPoints()) {
-                double pointX = (dx + point.getCords().get(0) + config.scale / 2) * canvas.getWidth() / scale;
-                double pointY = canvas.getHeight() - (dx + point.getCords().get(1) + config.scale / 2) * canvas.getHeight() / scale;
+                double pointX = (dx + point.getCoordinates().get(0) + config.scale / 2) * canvas.getWidth() / scale;
+                double pointY = canvas.getHeight() - (dx + point.getCoordinates().get(1) + config.scale / 2) * canvas.getHeight() / scale;
                 System.out.println("PointX " + pointX + ", PointY " + pointY);
                 gc.strokeOval(pointX, pointY, 2, 2);
             }

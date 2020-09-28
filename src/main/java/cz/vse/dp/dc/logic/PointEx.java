@@ -8,6 +8,7 @@ package cz.vse.dp.dc.logic;
 import cz.vse.dp.dc.logic.impl.EuclideanDistance;
 import cz.vse.dp.dc.logic.intf.IDistance;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -20,15 +21,15 @@ import java.util.stream.Collectors;
 public class PointEx implements Iterable<Double> {
 
     private static final long seedUniquifier = 8682522807148012L;
-    private final List<Double> cords;
+    private final List<Double> coordinates;
 
-    public PointEx(int dimension, List<Double> cords) {
+    public PointEx(int dimension, List<Double> coordinates) {
 
-        if (cords.size() != dimension) {
-            throw new IllegalArgumentException("Dimension must equal to cords size.");
+        if (coordinates.size() != dimension) {
+            throw new IllegalArgumentException("Dimension must equal to coordinates size.");
         }
 
-        this.cords = new ArrayList<>(cords);
+        this.coordinates = new ArrayList<>(coordinates);
     }
 
     private PointEx(int dimension) {
@@ -41,16 +42,16 @@ public class PointEx implements Iterable<Double> {
             throw new IllegalArgumentException("Dimension must be greater than 0.");
         }
 
-        this.cords = new ArrayList<>(dimension);
+        this.coordinates = new ArrayList<>(dimension);
         if (isEmptyPoint) {
             for (int i = 0; i < dimension; i++) {
-                this.cords.add(0d);
+                this.coordinates.add(0d);
             }
         }
     }
 
     private PointEx(PointEx point) {
-        this.cords = new ArrayList<>(point.getCords());
+        this.coordinates = new ArrayList<>(point.getCoordinates());
     }
 
     public static PointEx createRandom(int dimensions, DistributionType distributionType) {
@@ -73,7 +74,7 @@ public class PointEx implements Iterable<Double> {
                     throw new IllegalArgumentException("Unknown enum value " + distributionType);
 
             }
-            result.getCords().add(randomValue);
+            result.getCoordinates().add(randomValue);
         }
 
         return result;
@@ -93,25 +94,26 @@ public class PointEx implements Iterable<Double> {
     }
 
     @Override
+    @Nonnull
     public Iterator<Double> iterator() {
-        if (cords != null) {
-            return cords.iterator();
+        if (coordinates != null) {
+            return coordinates.iterator();
         } else {
-            throw new IllegalArgumentException("Coords must not be null");
+            throw new IllegalArgumentException("Coordinates must not be null");
         }
     }
 
-    public List<Double> getCords() {
-        return cords;
+    public List<Double> getCoordinates() {
+        return coordinates;
     }
 
     public int getDimension() {
-        return cords.size();
+        return coordinates.size();
     }
 
     public PointEx multiply(double scale) {
 
-        List<Double> multipliedNumbers = getCords().stream()
+        List<Double> multipliedNumbers = getCoordinates().stream()
                 .map(c -> c * scale)
                 .collect(Collectors.toList());
 
@@ -122,7 +124,7 @@ public class PointEx implements Iterable<Double> {
         PointEx result = new PointEx(this);
 
         for (int i = 0; i < this.getDimension(); i++) {
-            result.getCords().set(i, result.getCords().get(i) + right.getCords().get(i));
+            result.getCoordinates().set(i, result.getCoordinates().get(i) + right.getCoordinates().get(i));
         }
 
         return result;
@@ -132,7 +134,7 @@ public class PointEx implements Iterable<Double> {
     public String toString() {
         StringBuilder builder = new StringBuilder();
 
-        cords.forEach(t -> builder.append(t).append("; "));
+        coordinates.forEach(t -> builder.append(t).append("; "));
 
         return builder.toString().replaceAll("\\.", ",");
     }
