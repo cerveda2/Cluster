@@ -4,6 +4,9 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 group 'cz.vse.dp.dc'
 version '0.1'
 
