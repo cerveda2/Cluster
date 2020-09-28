@@ -11,6 +11,14 @@ repositories {
     mavenCentral()
 }
 
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'cz.vse.dp.dc.ui.Main'
+        )
+    }
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'org.apache.spark', name: 'spark-core_2.12', version: '2.4.5'
