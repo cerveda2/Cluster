@@ -4,6 +4,7 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
+mainClassName = 'cz.vse.dp.dc.ui.Main'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -17,21 +18,27 @@ repositories {
 jar {
     manifest {
         attributes(
-                'Main-Class': 'cz.vse.dp.dc.ui.Main'
+                'Main-Class': "$mainClassName"
         )
     }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    } {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+    zip64(true)
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile group: 'org.apache.spark', name: 'spark-core_2.12', version: '2.4.5'
-    compile group: 'org.apache.spark', name: 'spark-mllib_2.12', version: '2.4.5'
+    implementation group: 'org.apache.spark', name: 'spark-core_2.12', version: '2.4.5'
+    implementation group: 'org.apache.spark', name: 'spark-mllib_2.12', version: '2.4.5'
 }
 
 javafx {
     version = "11.0.2"
     modules = [ 'javafx.controls' ]
 }
-
-mainClassName = 'cz.vse.dp.dc.ui.Main'
 
