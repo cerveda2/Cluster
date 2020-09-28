@@ -50,6 +50,7 @@ public class MainWindow {
     static Label distributionLbl = new Label("Rozdělení:");
     static Label outputLbl = new Label("Výstupní soubor:");
     static Label iterationsLbl = new Label("Počet iterací:");
+    static Label drawGraphLbl = new Label("Vykreslit graf");
     static Canvas canvas = new Canvas();
 
     public static void openWindow(Stage stage) {
@@ -100,6 +101,9 @@ public class MainWindow {
         ComboBox<String> comboBox = new ComboBox<>(options);
         comboBox.setValue("Normální");
 
+        CheckBox checkBox = new CheckBox();
+        checkBox.setSelected(true);
+
         /*final ToggleGroup group1 = new ToggleGroup();
 
         RadioButton rb1 = new RadioButton("Normální");
@@ -127,8 +131,9 @@ public class MainWindow {
         innerGrid.add(distributionLbl, 0, 6, 1, 1);
         innerGrid.add(outputLbl, 0, 8, 1, 2);
         innerGrid.add(iterationsLbl, 0, 10);
-        innerGrid.add(centersLbl, 0, 12);
-        innerGrid.add(pointsLbl, 0, 14);
+        innerGrid.add(drawGraphLbl, 0, 11);
+        innerGrid.add(centersLbl, 0, 13);
+        innerGrid.add(pointsLbl, 0, 15);
 
         innerGrid.add(sizeArea, 1, 0);
         innerGrid.add(countArea, 1, 1);
@@ -137,8 +142,9 @@ public class MainWindow {
         innerGrid.add(scaleArea, 1, 4);
         innerGrid.add(dimensionsArea, 1, 5);
         innerGrid.add(iterationsArea, 1, 10);
-        innerGrid.add(centersArea, 0, 13, 2, 1);
-        innerGrid.add(pointsArea, 0, 15, 2, 1);
+        innerGrid.add(checkBox, 1, 11);
+        innerGrid.add(centersArea, 0, 14, 2, 1);
+        innerGrid.add(pointsArea, 0, 16, 2, 1);
 
         innerGrid.add(comboBox, 1, 6);
         //innerGrid.add(rb2, 1, 7);
@@ -150,7 +156,7 @@ public class MainWindow {
 
         Button generateBtn = new Button("Generovat");
         generateBtn.setPrefWidth(270);
-        innerGrid.add(generateBtn, 0, 11, 2, 1);
+        innerGrid.add(generateBtn, 0, 12, 2, 1);
 
         sizeArea.setText("200");
         countArea.setText("2");
@@ -216,7 +222,7 @@ public class MainWindow {
 
             }
 
-            if (config != null) {
+            if (config != null && checkBox.isSelected()) {
                 drawGraph(config);
             }
 
