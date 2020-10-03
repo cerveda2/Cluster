@@ -15,6 +15,10 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -52,6 +56,7 @@ public class MainWindow {
     static Label iterationsLbl = new Label("Počet iterací:");
     static Label drawGraphLbl = new Label("Vykreslit graf");
     static Canvas canvas = new Canvas();
+    static final ProgressBar pb = new ProgressBar(0);
 
     public static void openWindow(Stage stage) {
 
@@ -63,8 +68,13 @@ public class MainWindow {
 
         canvas.setWidth(630);
         canvas.setHeight(630);
+        outerGrid.setPadding(new Insets(25, 25, 25, 25));
 
         outerGrid.add(canvas, 1, 0);
+        pb.setMinWidth(630);
+        outerGrid.add(pb, 1, 1);
+        pb.setProgress(0);
+
 
         //drawing components to the inner grid
         setInnerGrid(outerGrid);
@@ -72,7 +82,7 @@ public class MainWindow {
         StackPane root = new StackPane();
         root.getChildren().add(outerGrid);
 
-        Scene scene = new Scene(root, 1050, 860);
+        Scene scene = new Scene(root, 1000, 700);
 
         stage.setMinWidth(967);
         stage.setMinHeight(670);
@@ -87,7 +97,7 @@ public class MainWindow {
 
         innerGrid.setHgap(10);
         innerGrid.setVgap(10);
-        innerGrid.setPadding(new Insets(25, 25, 25, 25));
+        innerGrid.setPadding(new Insets(0, 25, 0, 0));
 
         ColumnConstraints column1 = new ColumnConstraints(150);
         ColumnConstraints column2 = new ColumnConstraints();
@@ -155,7 +165,7 @@ public class MainWindow {
         pointsArea.setEditable(false);
 
         Button generateBtn = new Button("Generovat");
-        generateBtn.setPrefWidth(270);
+        generateBtn.setPrefWidth(300);
         innerGrid.add(generateBtn, 0, 12, 2, 1);
 
         sizeArea.setText("200");
@@ -246,7 +256,7 @@ public class MainWindow {
                 pointsArea.setText(points.substring(0, pointsCount - 2));
             }
         });
-        grid.add(innerGrid, 0, 0);
+        grid.add(innerGrid, 0, 0, 1, 2);
     }
 
     private static void addListener (final TextField... textFields) {

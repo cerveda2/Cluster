@@ -113,7 +113,8 @@ public class PointEx implements Iterable<Double> {
 
     public PointEx multiply(double scale) {
 
-        List<Double> multipliedNumbers = getCoordinates().stream()
+        List<Double> multipliedNumbers = getCoordinates()
+                .stream()
                 .map(c -> c * scale)
                 .collect(Collectors.toList());
 
