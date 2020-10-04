@@ -203,20 +203,32 @@ public class MainWindow {
             String outputFile = selectedToggle1.getText().toLowerCase();
 
             final ClusterConfig[] config = {null};
+            final ClusterConfig[] drawableConfig = {null};
 
             Task<Void> task = new Task<Void>() {
                 @Override
                 protected Void call() throws Exception {
                     final int iterations = Integer.parseInt(iterationsArea.getText());
+                    int failedAttempts = 0;
                     for (int i = 0; i < iterations; i++) {
                         updateProgress(i + 1, iterations);
                         StringBuilder sb = new StringBuilder();
                         config[0] = new ClusterConfig(size, count, perimeter, distance, scale, dimensions, distributionType);
                         try {
                             config[0].generate();
+
+                            if (config[0].getClusters() != null) {
+                                drawableConfig[0] = config[0];
+                            }
                         } catch (IllegalArgumentException e) {
-                            JOptionPane.showMessageDialog(null, "Nepodařilo se vygenerovat shluky s touto konfigurací.",
-                                    "Chyba", JOptionPane.ERROR_MESSAGE);
+                            failedAttempts++;
+                            System.out.println("Failed attempt number: " + (i + 1) + ". Total: " + failedAttempts);
+                            if (failedAttempts < iterations) {
+                                continue;
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Nepodařilo se vygenerovat shluky s touto konfigurací.",
+                                        "Chyba", JOptionPane.ERROR_MESSAGE);
+                            }
                         }
 
                 /*for (PointEx center : config.getCenters()) {
@@ -254,13 +266,13 @@ public class MainWindow {
             }*/
 
             task.setOnSucceeded(event1 -> {
-                if (config[0] != null && checkBox.isSelected()) {
-                    drawGraph(config[0]);
+                if (drawableConfig[0] != null && checkBox.isSelected()) {
+                    drawGraph(drawableConfig[0]);
                 }
 
                 centersArea.clear();
-                if (config[0] != null) {
-                    for (PointEx center : config[0].getCenters()) {
+                if (drawableConfig[0] != null) {
+                    for (PointEx center : drawableConfig[0].getCenters()) {
                         centersArea.appendText(center.toString() + "\n");
                     }
                     String centers = centersArea.getText();
@@ -268,7 +280,7 @@ public class MainWindow {
                     centersArea.setText(centers.substring(0, centersCount - 2));
 
                     pointsArea.clear();
-                    for (Cluster cluster : config[0].getClusters()) {
+                    for (Cluster cluster : drawableConfig[0].getClusters()) {
                         for (PointEx point : cluster.getPoints()) {
                             pointsArea.appendText(point.toString() + "\n");
                         }
