@@ -10,6 +10,7 @@ import cz.vse.dp.dc.logic.impl.ApacheSparkTestClass;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -201,60 +202,82 @@ public class MainWindow {
             RadioButton selectedToggle1 = (RadioButton) group2.getSelectedToggle();
             String outputFile = selectedToggle1.getText().toLowerCase();
 
-            ClusterConfig config = null;
+            final ClusterConfig[] config = {null};
 
-            for (int i = 0; i < Integer.parseInt(iterationsArea.getText()); i++) {
-                StringBuilder sb = new StringBuilder();
-                config = new ClusterConfig(size, count, perimeter, distance, scale, dimensions, distributionType);
-                try {
-                    config.generate();
-                } catch (IllegalArgumentException e) {
-                    JOptionPane.showMessageDialog(null, "Nepodařilo se vygenerovat shluky s touto konfigurací.",
-                            "Chyba", JOptionPane.ERROR_MESSAGE);
-                }
+            Task<Void> task = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    final int iterations = Integer.parseInt(iterationsArea.getText());
+                    for (int i = 0; i < iterations; i++) {
+                        updateProgress(i + 1, iterations);
+                        StringBuilder sb = new StringBuilder();
+                        config[0] = new ClusterConfig(size, count, perimeter, distance, scale, dimensions, distributionType);
+                        try {
+                            config[0].generate();
+                        } catch (IllegalArgumentException e) {
+                            JOptionPane.showMessageDialog(null, "Nepodařilo se vygenerovat shluky s touto konfigurací.",
+                                    "Chyba", JOptionPane.ERROR_MESSAGE);
+                        }
 
                 /*for (PointEx center : config.getCenters()) {
                     sb.append(center.toString()).append("\r\n");
                 }*/
 
-                for (Cluster cluster : config.getClusters()) {
-                    for (PointEx point : cluster.getPoints()) {
-                        sb.append(point.toString()).append("\r\n");
+                        for (Cluster cluster : config[0].getClusters()) {
+                            for (PointEx point : cluster.getPoints()) {
+                                sb.append(point.toString()).append("\r\n");
+                            }
+                        }
+
+                        String result = sb.toString();
+                        try {
+                            Tools.saveToFile(result, outputFile, i + 1);
+                        } catch (IOException ex) {
+                            System.out.print("Exception: " + ex);
+                        }
+
                     }
+                    return null;
                 }
 
-                String result = sb.toString();
-                try {
-                    Tools.saveToFile(result, outputFile, i + 1);
-                } catch (IOException ex) {
-                    System.out.print("Exception: " + ex);
+            };
+
+            pb.progressProperty().bind(task.progressProperty());
+            Thread th = new Thread(task);
+            th.setDaemon(true);
+            th.start();
+
+            /*try {
+                th.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
+
+            task.setOnSucceeded(event1 -> {
+                if (config[0] != null && checkBox.isSelected()) {
+                    drawGraph(config[0]);
                 }
 
-            }
-
-            if (config != null && checkBox.isSelected()) {
-                drawGraph(config);
-            }
-
-            centersArea.clear();
-            if (config != null) {
-                for (PointEx center : config.getCenters()) {
-                    centersArea.appendText(center.toString() + "\n");
-                }
-                String centers = centersArea.getText();
-                int centersCount = centersArea.getLength();
-                centersArea.setText(centers.substring(0, centersCount - 2));
-
-                pointsArea.clear();
-                for (Cluster cluster : config.getClusters()) {
-                    for (PointEx point : cluster.getPoints()) {
-                        pointsArea.appendText(point.toString() + "\n");
+                centersArea.clear();
+                if (config[0] != null) {
+                    for (PointEx center : config[0].getCenters()) {
+                        centersArea.appendText(center.toString() + "\n");
                     }
+                    String centers = centersArea.getText();
+                    int centersCount = centersArea.getLength();
+                    centersArea.setText(centers.substring(0, centersCount - 2));
+
+                    pointsArea.clear();
+                    for (Cluster cluster : config[0].getClusters()) {
+                        for (PointEx point : cluster.getPoints()) {
+                            pointsArea.appendText(point.toString() + "\n");
+                        }
+                    }
+                    String points = pointsArea.getText();
+                    int pointsCount = pointsArea.getLength();
+                    pointsArea.setText(points.substring(0, pointsCount - 2));
                 }
-                String points = pointsArea.getText();
-                int pointsCount = pointsArea.getLength();
-                pointsArea.setText(points.substring(0, pointsCount - 2));
-            }
+            });
         });
         grid.add(innerGrid, 0, 0, 1, 2);
     }
