@@ -197,7 +197,7 @@ public class MainWindow {
             int size = Integer.parseInt(sizeArea.getText());
             int dimensions = Integer.parseInt(dimensionsArea.getText());
             String distributionText = comboBox.getValue();
-            DistributionType distributionType = DistributionType.valueOf(distributionText.toUpperCase());
+            DistributionType distributionType = DistributionType.findByValue(distributionText.toLowerCase());
 
             RadioButton selectedToggle1 = (RadioButton) group2.getSelectedToggle();
             String outputFile = selectedToggle1.getText().toLowerCase();
