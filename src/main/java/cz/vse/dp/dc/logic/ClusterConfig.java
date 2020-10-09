@@ -54,13 +54,15 @@ public class ClusterConfig {
                 candidate[0] = PointEx
                         .createRandom(dimensions, distributionType)
                         .multiply(scale);
-            } while (attempts++ < 1000 && !centers
+            } while (attempts++ < 1000000 && !centers
                     .stream()
                     .allMatch(getMatch(candidate)));
 
-            if (attempts >= 1000) {
+            if (attempts >= 1000000) {
+                System.out.println("Attempts: " + attempts);
                 throw new IllegalArgumentException("Unable to find candidate after 1000 attempts.");
             }
+            attempts = 0;
             centers.add(candidate[0]);
         }
 
@@ -88,7 +90,7 @@ public class ClusterConfig {
     }
 
     private Predicate<PointEx> getMatch(final PointEx[] candidate) {
-        return p -> metric.calculateDistance(p, candidate[0]) > distance;
+        return doubles -> metric.calculateDistance(doubles, candidate[0]) > distance + clusterPerimeter * 2 - 1 && metric.calculateDistance(doubles, candidate[0]) < distance + clusterPerimeter * 2 + 1;
     }
 
     public List<PointEx> getCenters() {
