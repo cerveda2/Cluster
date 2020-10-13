@@ -5,6 +5,7 @@
  */
 package cz.vse.dp.dc.ui;
 
+import cz.vse.dp.dc.logic.impl.ApacheSparkTestClass;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -23,6 +24,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         MainWindow.openWindow(primaryStage);
+        ApacheSparkTestClass apacheSparkTestClass = new ApacheSparkTestClass();
+        apacheSparkTestClass.init();
     }
 
 }
