@@ -172,17 +172,15 @@ public class MainWindow {
         sizeArea.setText("200");
         countArea.setText("2");
         perimeterArea.setText("200");
-        distanceArea.setText("500");
+        distanceArea.setText("100");
         scaleArea.setText("1000");
         dimensionsArea.setText("2");
         iterationsArea.setText("1");
 
         // force the field to be numeric only
-
         addListener(sizeArea, countArea, perimeterArea, distanceArea, scaleArea, dimensionsArea, iterationsArea);
 
         generateBtn.setOnAction(event -> {
-
             if (distanceArea.getText().equals("") || scaleArea.getText().equals("") || perimeterArea.getText().equals("") ||
                     countArea.getText().equals("") || sizeArea.getText().equals("") || dimensionsArea.getText().equals("") ||
                     iterationsArea.getText().equals("")) {
@@ -305,7 +303,11 @@ public class MainWindow {
     }
 
     private static void validate(TextField textField, String newValue) {
-        if (!newValue.matches("\\d*")) {
+        String regex = "\\d*";
+        if (textField == distanceArea) {
+            regex = "-?\\d*";
+        }
+        if (!newValue.matches(regex)) {
             textField.setText(newValue.replaceAll("[^\\d]", ""));
         }
         if (newValue.length() > 0 && newValue.startsWith("0")) {
