@@ -5,8 +5,8 @@
  */
 package cz.vse.dp.dc.logic;
 
-import cz.vse.dp.dc.logic.impl.EuclideanDistance;
-import cz.vse.dp.dc.logic.intf.IDistance;
+import cz.vse.dp.dc.logic.impl.Calculation;
+import cz.vse.dp.dc.logic.intf.ICalculation;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -84,11 +84,11 @@ public class PointEx implements Iterable<Double> {
         PointEx candidate;
         // Je treba vytvorit bod ve kterem jsou sourdanice na 0,0 (Stred souradnic)
         PointEx emptyPoint = new PointEx(dimensions, true);
-        IDistance norm = new EuclideanDistance();
+        ICalculation norm = new Calculation();
 
         do {
             candidate = createRandom(dimensions, distributionType);
-        } while (norm.calculateDistance(candidate, emptyPoint) > 0.5);
+        } while (norm.calculateEuclideanDistance(candidate, emptyPoint) > 0.5);
 
         return candidate;
     }

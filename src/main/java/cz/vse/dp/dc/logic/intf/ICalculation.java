@@ -10,8 +10,12 @@ import cz.vse.dp.dc.logic.PointEx;
 /**
  * @author David Červenka
  */
-public interface IDistance {
+public interface ICalculation {
 
-    double calculateDistance(PointEx x, PointEx y);
+    double calculateEuclideanDistance(PointEx x, PointEx y);
+
+    int calculateAngle(int clusterCount);
+
+    double distanceToPreviousPoint(double distance, int angle);
 
 }
