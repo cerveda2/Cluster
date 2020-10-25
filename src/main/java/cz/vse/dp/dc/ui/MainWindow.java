@@ -16,10 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -292,7 +288,7 @@ public class MainWindow {
         grid.add(innerGrid, 0, 0, 1, 2);
     }
 
-    private static void addListener (final TextField... textFields) {
+    private static void addListener(final TextField... textFields) {
         if (textFields == null || textFields.length == 0) {
             return;
         }
@@ -310,7 +306,11 @@ public class MainWindow {
         if (!newValue.matches(regex)) {
             textField.setText(newValue.replaceAll("[^\\d]", ""));
         }
-        if (newValue.length() > 0 && newValue.startsWith("0")) {
+        int checkedLength = 0;
+        if (textField == distanceArea) {
+            checkedLength = 1;
+        }
+        if (newValue.length() > checkedLength && newValue.startsWith("0")) {
             textField.setText(newValue.replaceFirst("0", ""));
         }
     }
