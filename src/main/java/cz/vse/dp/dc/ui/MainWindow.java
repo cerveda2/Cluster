@@ -47,7 +47,7 @@ public class MainWindow {
     static Label sizeLbl = new Label("Velikost shluku:");
     static Label countLbl = new Label("Počet shluků:");
     static Label perimeterLbl = new Label("Poloměr shluku:");
-    static Label distanceLbl = new Label("Vzdálenost:");
+    static Label distanceLbl = new Label("Vzdálenost: [%]");
     static Label scaleLbl = new Label("Škála:");
     static Label dimensionsLbl = new Label("Dimenze:");
     static Label centersLbl = new Label("Středy:");

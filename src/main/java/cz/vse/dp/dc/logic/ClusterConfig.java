@@ -49,6 +49,8 @@ public class ClusterConfig {
 
     public void generate() {
 
+        distance = convertFromPercent();
+
         centers = new ArrayList<>();
         prevPrevCenters = new ArrayList<>();
         prevCenters = new ArrayList<>();
@@ -138,6 +140,14 @@ public class ClusterConfig {
      */
     private double getActualDistance() {
         return distance + clusterPerimeter * 2;
+    }
+
+    /**
+     * Method that converts relative distance in percent given by user to absolute distance
+     * @return distance in absolute values
+     */
+    private double convertFromPercent() {
+        return distance / 100 * clusterPerimeter * 2;
     }
 
     public List<PointEx> getCenters() {
