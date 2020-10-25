@@ -166,9 +166,9 @@ public class MainWindow {
         innerGrid.add(generateBtn, 0, 12, 2, 1);
 
         sizeArea.setText("200");
-        countArea.setText("2");
-        perimeterArea.setText("200");
-        distanceArea.setText("100");
+        countArea.setText("3");
+        perimeterArea.setText("100");
+        distanceArea.setText("50");
         scaleArea.setText("1000");
         dimensionsArea.setText("2");
         iterationsArea.setText("1");
