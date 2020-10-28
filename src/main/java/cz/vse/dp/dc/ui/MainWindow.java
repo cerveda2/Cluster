@@ -183,6 +183,10 @@ public class MainWindow {
                 JOptionPane.showMessageDialog(null, "Musíte vyplnit všechny potřebné parametry.");
                 return;
             }
+            if (Integer.parseInt(distanceArea.getText()) < -100) {
+                JOptionPane.showMessageDialog(null, "Vzdálenost nesmí být menší než -100 % průměru shluků.");
+                return;
+            }
 
             double distance = Double.parseDouble(distanceArea.getText());
             double scale = Double.parseDouble(scaleArea.getText());
