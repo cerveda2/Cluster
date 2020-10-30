@@ -257,12 +257,6 @@ public class MainWindow {
             th.setDaemon(true);
             th.start();
 
-            /*try {
-                th.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
-
             task.setOnSucceeded(event1 -> {
                 if (drawableConfig[0] != null && checkBox.isSelected()) {
                     drawGraph(drawableConfig[0]);
@@ -304,15 +298,13 @@ public class MainWindow {
 
     private static void validate(TextField textField, String newValue) {
         String regex = "\\d*";
+        int checkedLength = 0;
         if (textField == distanceArea) {
             regex = "-?\\d*";
+            checkedLength = 1;
         }
         if (!newValue.matches(regex)) {
             textField.setText(newValue.replaceAll("[^\\d]", ""));
-        }
-        int checkedLength = 0;
-        if (textField == distanceArea) {
-            checkedLength = 1;
         }
         if (newValue.length() > checkedLength && newValue.startsWith("0")) {
             textField.setText(newValue.replaceFirst("0", ""));

@@ -67,8 +67,8 @@ public class ClusterConfig {
                         .createRandom(dimensions, distributionType)
                         .multiply(scale);
             } while (attempts++ < 1000000
-                    && !(prevCenters.stream().allMatch(getMatch(candidate))
-                        && prevPrevCenters.stream().allMatch(getMatch(candidate, i))));
+                    && !(prevCenters.stream().allMatch(getMatch(candidate, getActualDistance()))
+                    && prevPrevCenters.stream().allMatch(getMatch(candidate, i))));
 
             if (attempts >= 1000000) {
                 System.out.println("Attempts: " + attempts);
@@ -115,27 +115,30 @@ public class ClusterConfig {
 
     /**
      * Method to determine whether two points next to each other are at a given distance.
+     *
      * @param candidate comparing point
      * @return if the two points are at given distance
      */
-    private Predicate<PointEx> getMatch(final PointEx[] candidate) {
-        return doubles -> metric.calculateEuclideanDistance(doubles, candidate[0]) > getActualDistance() - 1 && metric.calculateEuclideanDistance(doubles, candidate[0]) < getActualDistance() + 1;
+    private Predicate<PointEx> getMatch(final PointEx[] candidate, double point) {
+        return doubles -> metric.calculateEuclideanDistance(doubles, candidate[0]) > point - 1 && metric.calculateEuclideanDistance(doubles, candidate[0]) < point + 1;
     }
 
     /**
      * Method to determine whether two points with one in between them are at a given distance.
      * They should make a triangle from a calculated distance by a calculated angle depending on a number of clusters.
-     * @param candidate comparing point
+     *
+     * @param candidate       comparing point;
      * @param numberOfCluster where we are in the loop
      * @return if the two points are at given distance
      */
     private Predicate<PointEx> getMatch(final PointEx[] candidate, int numberOfCluster) {
         double usedPoint = numberOfCluster > 1 && distanceToPreviousPoint != null ? distanceToPreviousPoint : getActualDistance();
-        return doubles -> metric.calculateEuclideanDistance(doubles, candidate[0]) > usedPoint - 1 && metric.calculateEuclideanDistance(doubles, candidate[0]) < usedPoint + 1;
+        return getMatch(candidate, usedPoint);
     }
 
     /**
      * Calculate distance between two centers from twice the perimeter plus distance given.
+     *
      * @return distance between two centers
      */
     private double getActualDistance() {
@@ -144,6 +147,7 @@ public class ClusterConfig {
 
     /**
      * Method that converts relative distance in percent given by user to absolute distance
+     *
      * @return distance in absolute values
      */
     private double convertFromPercent() {

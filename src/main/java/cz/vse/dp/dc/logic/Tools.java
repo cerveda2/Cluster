@@ -15,6 +15,14 @@ import java.io.IOException;
 public class Tools {
 
 
+    /**
+     * Method to write result into file
+     *
+     * @param result   text to be written into file
+     * @param fileType type of output file
+     * @param count    number of iteration
+     * @throws IOException handling IOException
+     */
     public static void saveToFile(String result, String fileType, int count) throws IOException {
 
         File homeDirectory = new File(System.getProperty("user.home") + "/Desktop/Soubory");
@@ -28,7 +36,6 @@ public class Tools {
             System.out.print("Exception: " + e);
             throw new IOException("Unable to save into file", e);
         }
-
 
     }
 

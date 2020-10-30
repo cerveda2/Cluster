@@ -15,6 +15,7 @@ public class Calculation implements ICalculation {
 
     /**
      * Method to calculate euclidean distance between two points with variable dimensions
+     *
      * @param x Point one
      * @param y Point two
      * @return Euclidean distance of two points
@@ -34,6 +35,7 @@ public class Calculation implements ICalculation {
 
     /**
      * Calculates interior angle from a number of sides
+     *
      * @param clusterCount number of sides of a polygon
      * @return angle
      */
@@ -44,8 +46,9 @@ public class Calculation implements ICalculation {
 
     /**
      * Calculates distance in a triangle of a third side
+     *
      * @param distance distance of two same sides
-     * @param angle angle needed to determine the length of the third side
+     * @param angle    angle needed to determine the length of the third side
      * @return third side of a triangle
      */
     @Override
@@ -55,7 +58,8 @@ public class Calculation implements ICalculation {
 
     /**
      * Method to round calculated distance.
-     * @param value actual value
+     *
+     * @param value  actual value
      * @param places number of decimal points
      * @return rounded number
      */

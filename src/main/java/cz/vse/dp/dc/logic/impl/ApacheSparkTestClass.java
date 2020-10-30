@@ -23,7 +23,7 @@ public class ApacheSparkTestClass {
         SparkContext sc = new SparkContext(conf);
         JavaSparkContext jsc = JavaSparkContext.fromSparkContext(sc);
         List<Vector> data = Arrays.asList(
-                Vectors.sparse(5, new int[] {1, 3}, new double[] {1.0, 7.0}),
+                Vectors.sparse(5, new int[]{1, 3}, new double[]{1.0, 7.0}),
                 Vectors.dense(2.0, 0.0, 3.0, 4.0, 5.0),
                 Vectors.dense(4.0, 0.0, 0.0, 6.0, 7.0)
         );
@@ -39,12 +39,8 @@ public class ApacheSparkTestClass {
 
         // Project the rows to the linear space spanned by the top 4 principal components.
         RowMatrix projected = mat.multiply(pc);
-        Vector[] collectPartitions = (Vector[])projected.rows().collect();
-        /*System.out.println("Projected vector of principal component:");
-        for (Vector vector : collectPartitions) {
-            // Log transformed coordinates
-            System.out.println("\t" + vector);
-        }*/
+        Vector[] collectPartitions = (Vector[]) projected.rows().collect();
+
         jsc.stop();
     }
 
@@ -89,7 +85,7 @@ public class ApacheSparkTestClass {
         RowMatrix projected = mat.multiply(pc);
 
 
-        Vector[] collectPartitions = (Vector[])projected.rows().collect();
+        Vector[] collectPartitions = (Vector[]) projected.rows().collect();
         Cluster pcaCluster = new Cluster();
         List<PointEx> points = new ArrayList<>();
         System.out.println("Projected vector of principal component:");
