@@ -9,7 +9,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group 'cz.vse.dp.dc'
-version '0.1'
+version '2.0'
 
 repositories {
     mavenCentral()
