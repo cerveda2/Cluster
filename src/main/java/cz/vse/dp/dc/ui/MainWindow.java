@@ -49,6 +49,7 @@ public class MainWindow {
     static Label centersLbl = new Label("Středy:");
     static Label pointsLbl = new Label("Body:");
     static Label distributionLbl = new Label("Rozdělení:");
+    static Label generatorLbl = new Label("Generátor:");
     static Label outputLbl = new Label("Výstupní soubor:");
     static Label iterationsLbl = new Label("Počet iterací:");
     static Label drawGraphLbl = new Label("Vykreslit graf");
@@ -100,25 +101,24 @@ public class MainWindow {
         ColumnConstraints column2 = new ColumnConstraints();
         innerGrid.getColumnConstraints().addAll(column1, column2);
 
-        ObservableList<String> options =
+        ObservableList<String> distributionOptions =
                 FXCollections.observableArrayList(
                         "Normální",
                         "Rovnoměrné"
                 );
-        ComboBox<String> comboBox = new ComboBox<>(options);
-        comboBox.setValue("Normální");
+        ComboBox<String> comboBoxDis = new ComboBox<>(distributionOptions);
+        comboBoxDis.setValue("Normální");
+
+        ObservableList<String> generatorOptions =
+                FXCollections.observableArrayList(
+                        "Random",
+                        "SecureRandom"
+                );
+        ComboBox<String> comboBoxGen = new ComboBox<>(generatorOptions);
+        comboBoxGen.setValue("Random");
 
         CheckBox checkBox = new CheckBox();
         checkBox.setSelected(true);
-
-        /*final ToggleGroup group1 = new ToggleGroup();
-
-        RadioButton rb1 = new RadioButton("Normální");
-        rb1.setToggleGroup(group1);
-        rb1.setSelected(true);
-
-        RadioButton rb2 = new RadioButton("Rovnoměrné");
-        rb2.setToggleGroup(group1);*/
 
         final ToggleGroup group2 = new ToggleGroup();
 
@@ -135,7 +135,8 @@ public class MainWindow {
         innerGrid.add(distanceLbl, 0, 3);
         innerGrid.add(scaleLbl, 0, 4);
         innerGrid.add(dimensionsLbl, 0, 5);
-        innerGrid.add(distributionLbl, 0, 6, 1, 1);
+        innerGrid.add(distributionLbl, 0, 6);
+        innerGrid.add(generatorLbl, 0, 7);
         innerGrid.add(outputLbl, 0, 8, 1, 2);
         innerGrid.add(iterationsLbl, 0, 10);
         innerGrid.add(drawGraphLbl, 0, 11);
@@ -153,8 +154,9 @@ public class MainWindow {
         innerGrid.add(centersArea, 0, 14, 2, 1);
         innerGrid.add(pointsArea, 0, 16, 2, 1);
 
-        innerGrid.add(comboBox, 1, 6);
-        //innerGrid.add(rb2, 1, 7);
+        innerGrid.add(comboBoxDis, 1, 6);
+        innerGrid.add(comboBoxGen, 1, 7);
+
         innerGrid.add(rb3, 1, 8);
         innerGrid.add(rb4, 1, 9);
 
@@ -194,8 +196,9 @@ public class MainWindow {
             int count = Integer.parseInt(countArea.getText());
             int size = Integer.parseInt(sizeArea.getText());
             int dimensions = Integer.parseInt(dimensionsArea.getText());
-            String distributionText = comboBox.getValue();
+            String distributionText = comboBoxDis.getValue();
             DistributionType distributionType = DistributionType.findByValue(distributionText.toLowerCase());
+            String generatorText = comboBoxGen.getValue();
 
             RadioButton selectedToggle1 = (RadioButton) group2.getSelectedToggle();
             String outputFile = selectedToggle1.getText().toLowerCase();
@@ -211,7 +214,7 @@ public class MainWindow {
                     for (int i = 0; i < iterations; i++) {
                         updateProgress(i + 1, iterations);
                         StringBuilder sb = new StringBuilder();
-                        config[0] = new ClusterConfig(size, count, perimeter, distance, scale, dimensions, distributionType);
+                        config[0] = new ClusterConfig(size, count, perimeter, distance, scale, dimensions, distributionType, generatorText);
                         try {
                             config[0].generate();
 

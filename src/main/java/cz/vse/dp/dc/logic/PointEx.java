@@ -9,6 +9,8 @@ import cz.vse.dp.dc.logic.impl.Calculation;
 import cz.vse.dp.dc.logic.intf.ICalculation;
 
 import javax.annotation.Nonnull;
+import java.nio.ByteBuffer;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -54,10 +56,23 @@ public class PointEx implements Iterable<Double> {
         this.coordinates = new ArrayList<>(point.getCoordinates());
     }
 
-    public static PointEx createRandom(int dimensions, DistributionType distributionType) {
+    private static byte[] longToBytes(long x) {
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(x);
+        return buffer.array();
+    }
+
+    public static PointEx createRandom(int dimensions, DistributionType distributionType, String generatorType) {
         PointEx result = new PointEx(dimensions);
 
         Random rnd = new Random(seedUniquifier + System.nanoTime());
+
+        // Use secure random class in case user wants it
+        if ("SecureRandom".equals(generatorType)) {
+            byte[] seed = longToBytes(seedUniquifier + System.nanoTime());
+            rnd = new SecureRandom(seed);
+        }
+
         for (int i = 0; i < dimensions; i++) {
             double randomValue;
             switch (distributionType) {
@@ -80,14 +95,14 @@ public class PointEx implements Iterable<Double> {
         return result;
     }
 
-    public static PointEx createRandomSpherical(int dimensions, DistributionType distributionType) {
+    public static PointEx createRandomSpherical(int dimensions, DistributionType distributionType, String generatorType) {
         PointEx candidate;
         // Je treba vytvorit bod ve kterem jsou sourdanice na 0,0 (Stred souradnic)
         PointEx emptyPoint = new PointEx(dimensions, true);
         ICalculation norm = new Calculation();
 
         do {
-            candidate = createRandom(dimensions, distributionType);
+            candidate = createRandom(dimensions, distributionType, generatorType);
         } while (norm.calculateEuclideanDistance(candidate, emptyPoint) > 0.5);
 
         return candidate;

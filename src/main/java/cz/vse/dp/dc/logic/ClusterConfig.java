@@ -31,8 +31,9 @@ public class ClusterConfig {
     public int clusterSize;
     public DistributionType distributionType;
     private Double distanceToPreviousPoint;
+    private String generatorType;
 
-    public ClusterConfig(int clusterSize, int clusterCount, double clusterPerimeter, double distance, double scale, int dimensions, DistributionType distributionType) {
+    public ClusterConfig(int clusterSize, int clusterCount, double clusterPerimeter, double distance, double scale, int dimensions, DistributionType distributionType, String generatorType) {
         this.clusterCount = clusterCount;
         this.dimensions = dimensions;
         this.scale = scale;
@@ -40,6 +41,7 @@ public class ClusterConfig {
         this.clusterPerimeter = clusterPerimeter;
         this.clusterSize = clusterSize;
         this.distributionType = distributionType;
+        this.generatorType = generatorType;
 
         centers = new ArrayList<>();
         prevCenters = new ArrayList<>();
@@ -64,7 +66,7 @@ public class ClusterConfig {
         for (int i = 0; i < clusterCount; i++) {
             do {
                 candidate[0] = PointEx
-                        .createRandom(dimensions, distributionType)
+                        .createRandom(dimensions, distributionType, generatorType)
                         .multiply(scale);
             } while (attempts++ < 1000000
                     && !(prevCenters.stream().allMatch(getMatch(candidate, getActualDistance()))
@@ -105,7 +107,7 @@ public class ClusterConfig {
 
         for (int i = 0; i < clusterSize; i++) {
             double clusterScale = 2 * clusterPerimeter;
-            PointEx multiply = PointEx.createRandomSpherical(dimensions, distributionType).multiply(clusterScale);
+            PointEx multiply = PointEx.createRandomSpherical(dimensions, distributionType, generatorType).multiply(clusterScale);
             PointEx plus = multiply.plus(center);
             result.getPoints().add(plus);
         }
