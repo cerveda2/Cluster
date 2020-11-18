@@ -56,12 +56,6 @@ public class PointEx implements Iterable<Double> {
         this.coordinates = new ArrayList<>(point.getCoordinates());
     }
 
-    private static byte[] longToBytes(long x) {
-        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-        buffer.putLong(x);
-        return buffer.array();
-    }
-
     public static PointEx createRandom(int dimensions, DistributionType distributionType, String generatorType) {
         PointEx result = new PointEx(dimensions);
 
@@ -69,8 +63,7 @@ public class PointEx implements Iterable<Double> {
 
         // Use secure random class in case user wants it
         if ("SecureRandom".equals(generatorType)) {
-            byte[] seed = longToBytes(seedUniquifier + System.nanoTime());
-            rnd = new SecureRandom(seed);
+            rnd = new SecureRandom();
         }
 
         for (int i = 0; i < dimensions; i++) {
