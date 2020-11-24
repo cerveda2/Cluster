@@ -232,13 +232,13 @@ public class MainWindow {
                             }
                         }
 
-                /*for (PointEx center : config.getCenters()) {
-                    sb.append(center.toString()).append("\r\n");
-                }*/
-
+                        int j = 0;
                         for (Cluster cluster : config[0].getClusters()) {
+                            j++;
                             for (PointEx point : cluster.getPoints()) {
-                                sb.append(point.toString()).append("\r\n");
+                                sb.append(point.toString());
+                                sb.append(j);
+                                sb.append("\r\n");
                             }
                         }
 
